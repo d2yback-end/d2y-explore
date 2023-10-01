@@ -1,0 +1,38 @@
+# Konfigurasi Port Server
+server.port=5000
+
+# Konfigurasi Spring Application
+spring.application.name=d2y-official-api
+
+# Konfigurasi Data Source (PostgreSQL)
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.url=jdbc:postgresql://localhost:5432/name
+spring.datasource.username=
+spring.datasource.password=
+
+#spring.jpa.properties.hibernate.default_schema=working-report-dev
+spring.jackson.serialization.FAIL_ON_EMPTY_BEANS=false
+
+# Konfigurasi JPA (Hibernate)
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.show-sql=true
+
+# Konfigurasi Email
+spring.mail.host=host
+spring.mail.port=2525
+spring.mail.username=name
+spring.mail.password=password
+spring.mail.protocol=smtp
+spring.mail.properties.mail.smtp.auth=false
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+# Konfigurasi JWT
+jwt.header=Authorization
+jwt.prefix=Bearer
+jwt.expiration=86400000
+jwt.refresh-expiration=604800000
+jwt.public.key=classpath:app.pub
+jwt.private.key=classpath:app.key
+

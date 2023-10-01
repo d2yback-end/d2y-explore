@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Verification</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #ececec;
+      }
+
+      .container {
+        margin: 0 auto;
+        max-width: 70%; /* Max width for desktop */
+        padding: 20px;
+      }
+
+      .header {
+        background-color: #0e0e0e;
+        padding: 4px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+      }
+
+      .header img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .image-wrap {
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        padding: 20px 30px;
+      }
+
+      .content {
+        background-color: #ffffff;
+        padding: 20px 40px;
+        color: #3d3d3d;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #111111;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .button:hover {
+        background-color: #242222;
+      }
+
+      @media screen and (max-width: 768px) {
+        /* Styles for tablets and smaller screens */
+        .container {
+          max-width: 100%; /* Adjust to full width for smaller screens */
+          margin: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header"></div>
+      <div class="image-wrap">
+        <img
+          src="https://avatars.githubusercontent.com/u/57015700?s=400&u=e7fa24a504bd19d159da65b8ba283a04acc0bd1a&v=4"
+          height="50"
+          alt="Company Logo"
+        />
+      </div>
+      <div class="content">
+        <h1>Email Verification</h1>
+        <p>Hello, <span th:text="${username}" style="text-transform: capitalize"></span>!</p>
+        <p>
+          Thank you for registering on our website. We are delighted to have you join us. To proceed, we need you to
+          verify your email address. Please click the button below to verify your email:
+        </p>
+        <br />
+        <a class="button" th:href="@{${verificationUrl}}">Verify My Email</a>
+        <br />
+        <br />
+        <p>
+          Please note that the verification token is valid for <strong>24 hours</strong> from the time of registration.
+          After this period, the token will expire, and you will need to request a new one if necessary.
+        </p>
+        <p>If you did not register for this, you can ignore this message. Your email will remain unverified.</p>
+        <div>
+          <br />
+          <p>Thank you,</p>
+          <p>D2Y OFFICIAL</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
