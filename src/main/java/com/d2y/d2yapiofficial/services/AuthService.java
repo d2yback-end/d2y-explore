@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import javax.validation.ValidationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -57,6 +58,8 @@ public class AuthService {
   private final PasswordEncoder passwordEncoder;
   private final AuthenticationManager authenticationManager;
   private final JwtProvider jwtProvider;
+
+  private final KafkaTemplate<String, NotificationEmail> kafkaTemplate;
 
   @Transactional
   public void registerUser(RegisterRequest registrationDto) {
@@ -149,7 +152,7 @@ public class AuthService {
 
   private void sendVerificationEmail(User user) {
     NotificationEmail mailMessage = createNotificationEmail(user);
-    mailService.sendMail(mailMessage);
+    kafkaTemplate.send("email-topic", mailMessage);
   }
 
   private NotificationEmail createNotificationEmail(User user) {

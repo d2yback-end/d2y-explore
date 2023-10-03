@@ -2,6 +2,7 @@ package com.d2y.d2yapiofficial.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -30,6 +31,7 @@ public class MailService {
   private String emailSenderAddress;
 
   @Async
+  @KafkaListener(topics = "email-topic", groupId = "d2y-group")
   void sendMail(NotificationEmail notificationEmail) {
     MimeMessagePreparator messagePreparator = mimeMessage -> {
       MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
