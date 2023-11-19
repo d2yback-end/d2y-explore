@@ -1,23 +1,25 @@
 package com.d2y.d2yapiofficial.dto.user;
 
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
+
+import javax.persistence.Id;
+
 import com.d2y.d2yapiofficial.models.User;
 import com.toedter.spring.hateoas.jsonapi.JsonApiTypeForClass;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
-import java.time.LocalDate; // Tambahkan import ini
-
-import javax.persistence.Id;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @JsonApiTypeForClass("Users")
-public class UserResponseDTO {
+public class UserResponseDTO implements Serializable {
   @Id
   private Long userId;
   private String username;
@@ -38,7 +40,7 @@ public class UserResponseDTO {
   private String address;
   private String website;
   private String gender;
-  private LocalDate dateOfBirth;
+  private String dateOfBirth;
 
   public UserResponseDTO(User users) {
     this.userId = users.getUserId();
@@ -60,6 +62,13 @@ public class UserResponseDTO {
     this.address = users.getAddress();
     this.website = users.getWebsite();
     this.gender = users.getGender();
-    this.dateOfBirth = users.getDateOfBirth();
+
+    if (users.getDateOfBirth() != null) {
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy");
+      this.dateOfBirth = users.getDateOfBirth().format(formatter);
+    } else {
+      this.dateOfBirth = "";
+    }
   }
+
 }

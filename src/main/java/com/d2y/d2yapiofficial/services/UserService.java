@@ -6,6 +6,10 @@ import java.util.List;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,7 @@ import com.d2y.d2yapiofficial.utils.constants.ConstantMessage;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@CacheConfig(cacheNames = { "users" })
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserService {
 
@@ -32,10 +37,18 @@ public class UserService {
   private final TimestampService timestampService;
   private final UserRoleRepository userRoleRepository;
 
+  @Cacheable(key = "#search")
   public Page<UserResponseDTO> getAllUsers(Pageable pageable, String search) {
     return userRepository.getListUsers(search.toLowerCase(), pageable);
   }
 
+  @Cacheable(key = "#userId")
+  public UserResponseDTO getUserById(Long userId) {
+    User user = getService.getUser(userId, ConstantMessage.USER_NOT_FOUND);
+    return buildUserDTO(user);
+  }
+
+  @CachePut(key = "#userId")
   public User updateUser(Long userId, UpdateUserDTO updateUserDTO) {
     User existingUser = getService.getUser(userId, ConstantMessage.USER_NOT_FOUND);
     updateFields(existingUser, updateUserDTO);
@@ -44,6 +57,7 @@ public class UserService {
     return userRepository.save(existingUser);
   }
 
+  @CacheEvict(allEntries = true)
   public void deleteUser(String token, Long userId) {
     String email = jwtProvider.getEmailFromToken(token);
     User updatedBy = getService.getUserByEmail(email, ConstantMessage.USER_NOT_FOUND);
@@ -63,7 +77,7 @@ public class UserService {
 
   }
 
-  private List<Boolean> checkPermission(Long userId) {
+  public List<Boolean> checkPermission(Long userId) {
     User user = getService.getUser(userId, ConstantMessage.USER_NOT_FOUND);
     List<UserRole> listUserRole = userRoleRepository.findByIdAndActiveList(user);
     List<Boolean> isPermission = new ArrayList<>();

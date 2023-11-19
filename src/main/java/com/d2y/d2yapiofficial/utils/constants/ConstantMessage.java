@@ -17,6 +17,7 @@ public class ConstantMessage {
   public static final String USER_NOT_FOUND = "User Data Not Found!";
   public static final String ROLE_PROJECT_NOT_FOUND = "Role Project Data Not Found!";
   public static final String ROLE_NOT_FOUND = "Role Id Data Not Found!";
+  public static final String CATEGORY_CODE_NOT_FOUND = "Category Code Id Data Not Found!";
   public static final String ROLE_PRIVILEGE_NOT_FOUND = "Role Privilege Data Not Found!";
   public static final String NOTIFICATION_EMAIL_SUCCESS = "Successfully sent an email to User";
   public static final String EMAIL_NOTIF_SENT = "Notification email was sent!";

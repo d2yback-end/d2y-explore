@@ -6,6 +6,10 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
@@ -35,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/users")
+
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserController {
 
@@ -53,8 +58,7 @@ public class UserController {
 
   @GetMapping("/{userId}")
   public ResponseEntity<Object> getUserById(@PathVariable Long userId) {
-    User user = getService.getUser(userId, ConstantMessage.USER_NOT_FOUND);
-    UserResponseDTO userDTO = userService.buildUserDTO(user);
+    UserResponseDTO userDTO = userService.getUserById(userId);
 
     return ResponseEntity.status(HttpStatus.OK).body(EntityModel.of(userDTO));
   }

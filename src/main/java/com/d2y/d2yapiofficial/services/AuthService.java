@@ -40,6 +40,8 @@ import com.d2y.d2yapiofficial.repositories.TokenRepository;
 import com.d2y.d2yapiofficial.repositories.UserRepository;
 import com.d2y.d2yapiofficial.repositories.UserRoleRepository;
 import com.d2y.d2yapiofficial.security.JwtProvider;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,11 +60,12 @@ public class AuthService {
   private final PasswordEncoder passwordEncoder;
   private final AuthenticationManager authenticationManager;
   private final JwtProvider jwtProvider;
+  private final ObjectMapper objectMapper;
 
-  private final KafkaTemplate<String, NotificationEmail> kafkaTemplate;
+  private final KafkaTemplate<String, String> kafkaTemplate;
 
   @Transactional
-  public void registerUser(RegisterRequest registrationDto) {
+  public void registerUser(RegisterRequest registrationDto) throws Exception {
     try {
       validateRegistrationInput(registrationDto);
 
@@ -150,9 +153,10 @@ public class AuthService {
     return password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%!*+=_^&\\-\\[\\]{}\\/?.,><\\\\|]).{8,}$");
   }
 
-  private void sendVerificationEmail(User user) {
+  private void sendVerificationEmail(User user) throws JsonProcessingException {
     NotificationEmail mailMessage = createNotificationEmail(user);
-    kafkaTemplate.send("email-topic", mailMessage);
+    String jsonMailMessage = objectMapper.writeValueAsString(mailMessage);
+    kafkaTemplate.send("email-topic", jsonMailMessage);
   }
 
   private NotificationEmail createNotificationEmail(User user) {

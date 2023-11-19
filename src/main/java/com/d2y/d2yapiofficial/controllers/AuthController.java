@@ -32,7 +32,7 @@ public class AuthController {
   private final RefreshTokenService refreshTokenService;
 
   @PostMapping("/register")
-  public ResponseEntity<Object> register(@RequestBody RegisterRequest registerRequest) {
+  public ResponseEntity<Object> register(@RequestBody RegisterRequest registerRequest) throws Exception {
     authService.registerUser(registerRequest);
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(JsonApiModelBuilder.jsonApiModel()

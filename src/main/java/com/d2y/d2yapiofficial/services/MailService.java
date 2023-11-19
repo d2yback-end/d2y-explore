@@ -15,6 +15,9 @@ import org.thymeleaf.context.Context;
 
 import com.d2y.d2yapiofficial.models.NotificationEmail;
 import com.d2y.d2yapiofficial.utils.constants.ConstantMessage;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,13 +29,15 @@ public class MailService {
 
   private final JavaMailSender mailSender;
   private final TemplateEngine templateEngine;
+  private final ObjectMapper objectMapper;
 
   @Value("${spring.mail.sender}")
   private String emailSenderAddress;
 
   @Async
   @KafkaListener(topics = "email-topic", groupId = "d2y-group")
-  void sendMail(NotificationEmail notificationEmail) {
+  void sendMail(String jsonMailMessage) throws JsonProcessingException {
+    NotificationEmail notificationEmail = objectMapper.readValue(jsonMailMessage, NotificationEmail.class);
     MimeMessagePreparator messagePreparator = mimeMessage -> {
       MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
       messageHelper.setFrom(emailSenderAddress, "D2Y OFFICIAL");
